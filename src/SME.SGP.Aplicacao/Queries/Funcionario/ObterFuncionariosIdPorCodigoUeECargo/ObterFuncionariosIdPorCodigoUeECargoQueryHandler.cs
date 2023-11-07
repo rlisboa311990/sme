@@ -21,9 +21,9 @@ namespace SME.SGP.Aplicacao
 
         public async Task<IEnumerable<long>> Handle(ObterFuncionariosIdPorCodigoUeECargoQuery request, CancellationToken cancellationToken)
         {
-            var codigosRf = servicoNotificacao.ObterFuncionariosPorNivel(request.CodigoUe, request.Cargo).Select(x => x.Id).ToList();
+            var codigosRf = (await servicoNotificacao.ObterFuncionariosPorNivelAsync(request.CodigoUe, request.Cargo)).Select(x => x.Id).ToList();
 
-            return await mediator.Send(new ObterUsuariosIdPorCodigosRfQuery(codigosRf));
+            return await mediator.Send(new ObterUsuariosIdPorCodigosRfQuery(codigosRf), cancellationToken);
 
         }
     }

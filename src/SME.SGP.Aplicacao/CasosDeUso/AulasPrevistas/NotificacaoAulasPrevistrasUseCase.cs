@@ -43,7 +43,7 @@ namespace SME.SGP.Aplicacao
         private async Task NotificaRegistroDivergencia(long usuarioId, RegistroAulaPrevistaDivergenteDto registroAulaPrevistaDivergente)
         {
             var tituloMensagem = $"Diferença entre aulas previstas e dadas - Turma {registroAulaPrevistaDivergente.NomeTurma}";
-            StringBuilder mensagemUsuario = new StringBuilder();
+            StringBuilder mensagemUsuario = new();
             mensagemUsuario.Append($"O total de aulas previstas não corresponde ao total de aulas dadas no {registroAulaPrevistaDivergente.Bimestre}º bimestre ");
             mensagemUsuario.Append($"para a turma {registroAulaPrevistaDivergente.NomeTurma} da escola {registroAulaPrevistaDivergente.NomeUe} ({registroAulaPrevistaDivergente.NomeDre})");
 

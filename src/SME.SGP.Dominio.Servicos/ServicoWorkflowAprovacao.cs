@@ -454,7 +454,7 @@ namespace SME.SGP.Dominio.Servicos
 
             if (nivel.Cargo.HasValue)
             {
-                var funcionariosRetorno = servicoNotificacao.ObterFuncionariosPorNivel(nivel.Workflow.UeId, nivel.Cargo, true, true);
+                var funcionariosRetorno = await servicoNotificacao.ObterFuncionariosPorNivelAsync(nivel.Workflow.UeId, nivel.Cargo, true, true);
 
                 foreach (var funcionario in funcionariosRetorno)
                 {
@@ -969,16 +969,16 @@ namespace SME.SGP.Dominio.Servicos
                                                                         motivo));
         }
 
-        private void TrataReprovacaoEventoDataPassada(WorkflowAprovacao workflow, long codigoDaNotificacao, string motivo)
+        private async Task TrataReprovacaoEventoDataPassada(WorkflowAprovacao workflow, long codigoDaNotificacao, string motivo)
         {
             Evento evento = repositorioEvento.ObterPorWorkflowId(workflow.Id);
             if (evento.EhNulo())
                 throw new NegocioException("Não foi possível localizar o evento deste fluxo de aprovação.");
 
             evento.ReprovarWorkflow();
-            repositorioEvento.Salvar(evento);
+            await repositorioEvento.SalvarAsync(evento);
 
-            NotificarCriadorEventoDataPassadaReprovacao(evento, codigoDaNotificacao, motivo);
+            await NotificarCriadorEventoDataPassadaReprovacao(evento, codigoDaNotificacao, motivo);
         }
 
         private async Task TrataReprovacaoEventoLiberacaoExcepcional(WorkflowAprovacao workflow, long codigoDaNotificacao, string motivo, Cargo? cargoDoNivelQueRecusou)
@@ -997,7 +997,7 @@ namespace SME.SGP.Dominio.Servicos
 
             if (cargoDoNivelQueRecusou == Cargo.Supervisor)
             {
-                var funcionariosRetorno = servicoNotificacao.ObterFuncionariosPorNivel(evento.UeId, Cargo.Diretor, true, true);
+                var funcionariosRetorno = await servicoNotificacao.ObterFuncionariosPorNivelAsync(evento.UeId, Cargo.Diretor, true, true);
 
                 foreach (var funcionario in funcionariosRetorno)
                 {

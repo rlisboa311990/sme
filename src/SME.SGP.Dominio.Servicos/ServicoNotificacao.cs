@@ -67,41 +67,7 @@ namespace SME.SGP.Dominio.Servicos
 
             await repositorioNotificacao.SalvarAsync(notificacao);
             await mediator.Send(new NotificarCriacaoNotificacaoCommand(notificacao));
-        }
-
-        public IEnumerable<(Cargo? Cargo, string Id)> ObterFuncionariosPorNivel(string codigoUe, Cargo? cargo, bool primeiroNivel = true, bool? notificacaoExigeAcao = false)
-        {
-            IEnumerable<SupervisorEscolasDreDto> supervisoresEscola = null;
-            IEnumerable<UsuarioEolRetornoDto> funcionarios = null;
-
-            if (cargo == Cargo.Supervisor)
-                supervisoresEscola = repositorioSupervisorEscolaDre.ObtemSupervisoresPorUe(codigoUe).Result;
-            else
-                funcionarios = mediator.Send(
-                    new ObterFuncionariosPorCargoUeQuery(codigoUe, (int) cargo)).Result;
-
-            var funcionariosDisponiveis = funcionarios?.Where(f => !f.EstaAfastado);
-
-            if (cargo == Cargo.Supervisor ? 
-                supervisoresEscola.EhNulo() || !supervisoresEscola.Any() :
-                funcionarios.EhNulo() || !funcionarios.Any() || (!funcionariosDisponiveis.Any() && notificacaoExigeAcao.Value))
-            {
-                Cargo? cargoProximoNivel = ObterProximoNivel(cargo, primeiroNivel);
-
-                if (!cargoProximoNivel.HasValue)
-                    return Enumerable.Empty<(Cargo?, string)>();
-
-                return  ObterFuncionariosPorNivel(codigoUe, cargoProximoNivel, false);
-            }
-            else
-            {
-                if (cargo == Cargo.Supervisor)
-                    return supervisoresEscola.Select(s => (Cargo: cargo, Id: s.SupervisorId));
-                else
-                    return funcionarios.Select(f => (Cargo: cargo, Id: f.CodigoRf));
-            }
-
-        }
+        }      
 
         public async Task<IEnumerable<(Cargo? Cargo, string Id)>> ObterFuncionariosPorNivelAsync(string codigoUe, Cargo? cargo, bool primeiroNivel = true, bool? notificacaoExigeAcao = false)
         {

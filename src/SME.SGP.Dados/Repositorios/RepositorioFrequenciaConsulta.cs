@@ -114,7 +114,7 @@ namespace SME.SGP.Dados.Repositorios
             return database.Conexao.QueryFirstOrDefault<RegistroFrequenciaAulaDto>(query, new { registroFrequenciaId });
         }
 
-        public IEnumerable<AulasPorTurmaDisciplinaDto> ObterAulasSemRegistroFrequencia(string turmaId, string disciplinaId, TipoNotificacaoFrequencia tipoNotificacao)
+        public async Task<IEnumerable<AulasPorTurmaDisciplinaDto>> ObterAulasSemRegistroFrequencia(string turmaId, string disciplinaId, TipoNotificacaoFrequencia tipoNotificacao)
         {
             var query = @"select
 	                        a.id,
@@ -145,7 +145,7 @@ namespace SME.SGP.Dados.Repositorios
 	                        and a.turma_id = @turmaId
 	                        and a.disciplina_id = @disciplinaId";
 
-            return database.Conexao.Query<AulasPorTurmaDisciplinaDto>(query, new { turmaId, disciplinaId, tipoNotificacao });
+            return await database.Conexao.QueryAsync<AulasPorTurmaDisciplinaDto>(query, new { turmaId, disciplinaId, tipoNotificacao });
         }
 
         public async Task<IEnumerable<AusenciaAlunoDto>> ObterAusencias(string turmaCodigo, string disciplinaCodigo, DateTime[] datas, string[] alunoCodigos)

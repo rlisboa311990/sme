@@ -24,7 +24,7 @@ namespace SME.SGP.Aplicacao
         public async Task<IEnumerable<ProfessorTitularDisciplinaEol>> Handle(ObterProfessoresTitularesDisciplinasEolQuery request, CancellationToken cancellationToken)
         {
             var httpClient = httpClientFactory.CreateClient(ServicosEolConstants.SERVICO);
-            StringBuilder url = new StringBuilder();
+            StringBuilder url = new();
 
             url.Append(string.Format(ServicosEolConstants.URL_PROFESSORES_TITULARES_TURMA, request.CodigoTurma, request.RealizaAgrupamento));
 
@@ -36,19 +36,19 @@ namespace SME.SGP.Aplicacao
             if (request.DataReferencia.HasValue)
             {
                 if (!string.IsNullOrEmpty(request.ProfessorRf))
-                    url.Append($"&dataReferencia={request.DataReferencia.Value.ToString("yyyy-MM-dd")}");
+                    url.Append($"&dataReferencia={request.DataReferencia.Value:yyyy-MM-dd}");
                 else
-                    url.Append($"?dataReferencia={request.DataReferencia.Value.ToString("yyyy-MM-dd")}");
+                    url.Append($"?dataReferencia={request.DataReferencia.Value:yyyy-MM-dd}");
             }
 
-            var resposta = await httpClient.GetAsync(url.ToString());
+            var resposta = await httpClient.GetAsync(url.ToString(), cancellationToken);
             if (!resposta.IsSuccessStatusCode)
                 return null;
 
             if (resposta.StatusCode == HttpStatusCode.NoContent)
                 return null;
 
-            var json = await resposta.Content.ReadAsStringAsync();
+            var json = await resposta.Content.ReadAsStringAsync(cancellationToken);
             return JsonConvert.DeserializeObject<IEnumerable<ProfessorTitularDisciplinaEol>>(json);
         }
         

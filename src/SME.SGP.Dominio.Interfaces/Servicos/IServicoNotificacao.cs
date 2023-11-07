@@ -13,8 +13,7 @@ namespace SME.SGP.Dominio.Interfaces
         Task<long> ObtemNovoCodigoAsync();
 
         Task Salvar(Notificacao notificacao);
-
-        IEnumerable<(Cargo? Cargo, string Id)> ObterFuncionariosPorNivel(string codigoUe, Cargo? cargo, bool primeiroNivel = true, bool? notificacaoExigeAcao = false);
+        
         Task<IEnumerable<(Cargo? Cargo, string Id)>> ObterFuncionariosPorNivelAsync(string codigoUe, Cargo? cargo, bool primeiroNivel = true, bool? notificacaoExigeAcao = false);
 
         Cargo? ObterProximoNivel(Cargo? cargo, bool primeiroNivel);

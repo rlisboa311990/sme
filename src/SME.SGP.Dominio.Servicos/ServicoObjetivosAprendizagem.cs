@@ -131,7 +131,7 @@ namespace SME.SGP.Dominio.Servicos
             }
         }
 
-        private ObjetivoAprendizagem MapearObjetivoRespostaParaDominio(ObjetivoAprendizagemResposta objetivo)
+        private static ObjetivoAprendizagem MapearObjetivoRespostaParaDominio(ObjetivoAprendizagemResposta objetivo)
         {
             return new ObjetivoAprendizagem
             {
